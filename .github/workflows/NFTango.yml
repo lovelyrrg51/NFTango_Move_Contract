@@ -1,0 +1,30 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: NFTango
+
+on:
+  push:
+    branches: [ main, develop]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install Aptos
+      run: |
+        result=$(curl -fsSL "https://aptos.dev/scripts/install_cli.py" | python3)
+        echo "$result"
+        echo "$(aptos --version)"
+    - name: Aptos Move Compile
+      run: |
+        result=$(aptos move compile)
+        echo "$result"
+    - name: Aptos Move Test
+      run: |
+        result=$(aptos move test)
+        echo "$result"
